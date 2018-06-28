@@ -1,14 +1,16 @@
 const mysql = require('mysql')
 const express = require('express')
 const bodyParser = require('body-parser')
+const keys = require('./config/keys') 
+
 let app = express()
 
 app.use(bodyParser.json())
 
 let mysqlConnection = mysql.createConnection({
     host: 'localhost',
-    user: 'root',
-    password: 'root9379992',
+    user: keys.mysql.user,
+    password: keys.mysql.pwd,
     database: 'userDb',
     multipleStatements: true
 });
