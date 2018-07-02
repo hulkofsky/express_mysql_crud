@@ -15,14 +15,14 @@
                     <li><a href="/auth/login">Login</a></li>
                 <%}%>
                 <li><a href="/">Homepage</a></li>
-                <li><a href="/profile">Profile</a></li>
             </ul>
         </nav>
         <header>
-            <h1>Main Page</h1>
+            <h1>Welcome to your profile, <%=user.name%>!</h1>
         </header>
         <main>
-            <p>Some main page info here</p>
+            <img src="<%= user.thumbnail %>" alt="user-thumbnail"/>
+            <p>extra info bout u, coz why the fuck not</p>
         </main>
     </body>
 </html>

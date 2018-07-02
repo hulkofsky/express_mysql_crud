@@ -8,5 +8,8 @@ module.exports = {
     mysql: {
         user: 'root',
         pwd: 'root9379992'
+    },
+    session: {
+        cookieKey: 'ababagalamaga'
     }
 }

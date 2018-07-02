@@ -23,7 +23,15 @@ passport.serializeUser((user, done)=>{
 
 passport.deserializeUser((id, done)=>{
     //SELECT USER BY ID QUERY HERE
-    done(null, user);
+    mysqlConnection.query(`SELECT * FROM authUsers WHERE id = ${id}`, (err, rows, fields)=>{
+        if(err) {
+            console.log(err);
+        } else {
+            console.log(rows, 'user found by id');
+            done(null, rows);
+        }
+        
+    })  
 })
 
 passport.use(
@@ -33,7 +41,9 @@ passport.use(
         clientID: keys.google.clientID,
         clientSecret: keys.google.clientSecret
     }, (accessToken, refreshToken, profile, done)=>{
-        //check if user already exsts in db
+        
+
+        //check if user already exists in db
         mysqlConnection.query(`SELECT * FROM authUsers WHERE id = ${profile.id}`, (err, rows, fields)=>{
             if(err) {
                 console.log(err);
@@ -42,18 +52,19 @@ passport.use(
                 if(rows.length > 0) {
                  //already have this user
                  console.log('user is:', rows); 
-                 done(null, rows)
+                 done(null, rows[0])
                 } else {
-                    //creating new user
+                    //creating new user                    
                     let user = {
                         id: profile.id,
                         username: profile.displayName,
-                        gender: profile.gender
+                        gender: profile.gender,
+                        thumbnail: profile._json.image.url
                     }
-                    mysqlConnection.query(`INSERT INTO authUsers (name, id, gender) VALUES ('${profile.displayName}', '${profile.id}', '${profile.gender}')`, (err, rows, fields)=>{
-                        err ? console.log(err) : console.log('KUSOCHEK HUINI INSERTED')
+                    mysqlConnection.query(`INSERT INTO authUsers (name, id, gender, thumbnail) VALUES ('${user.username}', '${user.id}', '${user.gender}', '${user.thumbnail}')`, (err, rows, fields)=>{
+                        err ? console.log(err) : console.log(`new user created ${user}`)
                     })
-                    done(null, data)
+                    done(null, user)
                 }
             }
         })    
